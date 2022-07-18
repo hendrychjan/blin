@@ -1,4 +1,5 @@
 import 'package:blin/get/app_controller.dart';
+import 'package:blin/services/app_init_service.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 
@@ -9,11 +10,11 @@ class User {
   User({required this.id, required this.name});
 
   User.fromJson(Map<String, dynamic> json)
-      : id = json["_id"],
+      : id = json["id"],
         name = json["name"];
 
   Map<String, dynamic> toJson() => {
-        "_id": id,
+        "id": id,
         "name": name,
       };
 
@@ -31,6 +32,9 @@ class User {
 
     // Set the logged in flag to true
     AppController.to.isLoggedIn.value = true;
+
+    // Download user data
+    await AppInitService.downloadUserData();
   }
 
   static Future<void> logoutLocally() async {
@@ -43,5 +47,8 @@ class User {
 
     // Set the logged in flag to false
     AppController.to.isLoggedIn.value = false;
+
+    // Remove user data
+    AppController.to.categories.value = [];
   }
 }

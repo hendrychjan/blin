@@ -7,8 +7,6 @@ import 'package:blin/services/blin_api/blin_auth_service.dart';
 import 'package:blin/services/http_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:jwt_decode/jwt_decode.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);

@@ -11,6 +11,8 @@ class BlinUITheme {
     const secondaryColor = Color.fromARGB(12, 25, 69, 102);
 
     return base.copyWith(
+        splashColor: primaryColor,
+
         // Elevated Button
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
@@ -88,8 +90,25 @@ class BlinUITheme {
           systemOverlayStyle: SystemUiOverlayStyle(
             statusBarBrightness: Brightness.dark,
             statusBarIconBrightness: Brightness.dark,
-            statusBarColor: Colors.white,
+            statusBarColor: Colors.transparent,
           ),
+        ),
+
+        // Action button
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: primaryColor,
+          foregroundColor: Colors.white,
+          elevation: 0,
+        ),
+
+        // Card
+        cardTheme: CardTheme(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4),
+          ),
+          clipBehavior: Clip.antiAlias,
+          margin: const EdgeInsets.only(left: 16, right: 16, top: 16),
         ),
 
         // Scaffold
