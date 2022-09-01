@@ -85,6 +85,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     hint: "Password",
                     controller: _passwordController,
                     validationRules: ["required"],
+                    obscureText: true,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 15),

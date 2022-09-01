@@ -22,7 +22,7 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
     // If yes, try to delete the category
     if (connected) {
       // Delete the category
-      await BlinCategoriesService.deleteCategory(widget.category);
+      await BlinCategoriesService.deleteCategory(widget.category.id);
 
       // Remove the category from the local storage
       AppController.to.categories.remove(widget.category);
@@ -34,22 +34,15 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
     }
   }
 
-  Future<void> _handleUpdate(Map form) async {
+  Future<void> _handleUpdate(Map<String, dynamic> form) async {
     // Check if the internet connection is available
     bool connected = await HttpService.checkInternetConnection();
 
     // If yes, try to update the category
     if (connected) {
-      Category newCategory = Category(
-        id: widget.category.id,
-        name: form['name'],
-        description: form['description'],
-        color: form['color'],
-      );
-
       // Update the category
       Category updated =
-          await BlinCategoriesService.updateCategory(newCategory);
+          await BlinCategoriesService.updateCategory(form, widget.category.id);
 
       // Update the category in AppController list of categories
       AppController.to.categories

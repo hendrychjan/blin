@@ -1,26 +1,36 @@
+import 'dart:convert' as conv;
+
 class Category {
-  String? id;
-  String name;
+  String id;
+  String title;
   String? description;
   String color;
 
   Category({
-    this.id,
-    required this.name,
+    required this.id,
+    required this.title,
     this.description,
     required this.color,
   });
 
-  Category.fromJson(Map<String, dynamic> json)
-      : id = json["id"],
-        name = json["name"],
-        description = json["description"],
-        color = json["color"];
+  factory Category.fromMap(Map<String, dynamic> map) {
+    return Category(
+      id: map["id"],
+      title: map["title"],
+      description: map["description"],
+      color: map["color"],
+    );
+  }
 
-  Map<String, dynamic> toJson() => {
+  factory Category.fromJson(String json) =>
+      Category.fromMap(conv.json.decode(json) as Map<String, dynamic>);
+
+  Map<String, dynamic> toMap() => {
         "id": id,
-        "name": name,
+        "title": title,
         "description": description,
         "color": color,
       };
+
+  String toJson() => conv.json.encode(toMap());
 }

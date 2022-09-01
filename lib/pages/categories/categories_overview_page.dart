@@ -4,7 +4,6 @@ import 'package:blin/models/category.dart';
 import 'package:blin/pages/categories/edit_category_page.dart';
 import 'package:blin/pages/categories/new_category_page.dart';
 import 'package:blin/services/blin_api/blin_categories_service.dart';
-import 'package:blin/theme/blin_ui_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -62,12 +61,14 @@ class _CategoriesOverviewPageState extends State<CategoriesOverviewPage> {
                     itemBuilder: (context, index) {
                       final category = AppController.to.categories[index];
                       return GestureDetector(
+                        key: UniqueKey(),
                         onTap: () => Get.to(
                           () => EditCategoryPage(category: category),
                         ),
                         child: Card(
                           child: ListTile(
-                            title: Text(category.name),
+                            title: Text(category.title),
+                            subtitle: Text(category.description ?? ''),
                             tileColor: Colors.grey[50],
                             textColor:
                                 UiController.hexStringToColor(category.color),

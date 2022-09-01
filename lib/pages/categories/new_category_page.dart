@@ -20,15 +20,9 @@ class _NewCategoryPageState extends State<NewCategoryPage> {
 
     // If yes, try to create the category
     if (connected) {
-      Category newCategory = Category(
-        id: null,
-        name: formValues['name'],
-        description: formValues['description'],
-        color: formValues['color'],
-      );
       // Create the category
       Category created =
-          await BlinCategoriesService.createNewCategory(newCategory);
+          await BlinCategoriesService.createNewCategory(formValues);
 
       // Save the category to the local storage
       AppController.to.categories.add(created);

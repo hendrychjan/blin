@@ -1,6 +1,9 @@
+import 'package:blin/get/app_controller.dart';
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class UiController extends GetxController {
   static UiController get to => Get.find();
@@ -13,12 +16,78 @@ class UiController extends GetxController {
     return Color(0xFF + int.parse(hexString.substring(1), radix: 16));
   }
 
+  static String formatCurrency(double value) {
+    String localeString = AppController.to.appLocale.string;
+
+    switch (localeString) {
+      case "cs_CZ":
+        return "${value.round()} Kč";
+      default:
+        return NumberFormat.currency(locale: AppController.to.appLocale.value)
+            .format(value);
+    }
+  }
+
+  static Widget renderSelect({
+    required String hint,
+    required List<Map> items,
+    required Function onChanged,
+    Icon? icon,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: DropdownButtonFormField(
+        decoration: InputDecoration(
+          prefixIcon: icon,
+          labelText: hint,
+        ),
+        value: items.first["value"],
+        items: items.map((item) {
+          return DropdownMenuItem(
+            value: item["value"],
+            child: Text(item["text"]),
+          );
+        }).toList(),
+        onChanged: (v) => onChanged(v),
+      ),
+    );
+  }
+
+  static Widget renderDateTimePicker({
+    required String hint,
+    required TextEditingController contoller,
+    required List<String> validationRules,
+    Icon icon = const Icon(Icons.calendar_today),
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: DateTimePicker(
+        type: DateTimePickerType.dateTime,
+        controller: contoller,
+        firstDate: DateTime(1900),
+        lastDate: DateTime(2100),
+        fieldLabelText: hint,
+        initialDate: DateTime.now(),
+        initialTime: TimeOfDay.now(),
+        validator: (value) {
+          return _handleValidate(value.toString(), validationRules);
+        },
+        locale: Get.locale,
+        decoration: InputDecoration(
+          prefixIcon: icon,
+          labelText: hint,
+        ),
+      ),
+    );
+  }
+
   static Widget renderTextInput({
     required String hint,
     required TextEditingController controller,
     required List<String> validationRules,
     TextInputType keyboardType = TextInputType.text,
     bool obscureText = false,
+    Icon? icon,
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
@@ -26,18 +95,12 @@ class UiController extends GetxController {
         keyboardType: keyboardType,
         controller: controller,
         decoration: InputDecoration(
-          // hintText: hint,
           labelText: hint,
+          prefixIcon: icon,
         ),
         obscureText: obscureText,
         validator: (value) {
-          if (validationRules.contains("required")) {
-            if (value == null || value.isEmpty) {
-              return "This field is required";
-            }
-          }
-
-          return null;
+          return _handleValidate(value.toString(), validationRules);
         },
       ),
     );
@@ -49,6 +112,7 @@ class UiController extends GetxController {
     required Color selected,
     required Function onChanged,
     required Function onSelected,
+    Icon? icon,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -91,5 +155,15 @@ class UiController extends GetxController {
         ),
       ],
     );
+  }
+
+  static String? _handleValidate(String? value, List<String> validationRules) {
+    if (validationRules.contains("required")) {
+      if (value == null || value.isEmpty) {
+        return "This field is required";
+      }
+    }
+
+    return null;
   }
 }

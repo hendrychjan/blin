@@ -19,7 +19,7 @@ class CategoryForm extends StatefulWidget {
 
 class _CategoryFormState extends State<CategoryForm> {
   final formKey = GlobalKey<FormState>();
-  final nameController = TextEditingController();
+  final titleController = TextEditingController();
   final descriptionController = TextEditingController();
   Color colorController = const Color(0xFF194466);
   Color colorSelected = const Color(0xFF194466);
@@ -30,7 +30,7 @@ class _CategoryFormState extends State<CategoryForm> {
   void initState() {
     super.initState();
     if (widget.initialState != null) {
-      nameController.text = widget.initialState!.name;
+      titleController.text = widget.initialState!.title;
       descriptionController.text = widget.initialState!.description ?? "";
       colorController =
           UiController.hexStringToColor(widget.initialState!.color);
@@ -46,8 +46,8 @@ class _CategoryFormState extends State<CategoryForm> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           UiController.renderTextInput(
-            hint: "Name",
-            controller: nameController,
+            hint: "Title",
+            controller: titleController,
             validationRules: ["required"],
           ),
           UiController.renderTextInput(
@@ -80,18 +80,15 @@ class _CategoryFormState extends State<CategoryForm> {
                       _isLoading = true;
                     });
 
-                    try {
-                      await widget.handleSubmit({
-                        "name": nameController.text,
-                        "description": descriptionController.text,
-                        "color": UiController.colorToHexString(colorSelected),
-                      });
-                    } catch (e) {
-                      setState(() {
-                        _error = e as String;
-                        _isLoading = false;
-                      });
-                    }
+                    await widget.handleSubmit({
+                      "title": titleController.text,
+                      "description": descriptionController.text,
+                      "color": UiController.colorToHexString(colorSelected),
+                    });
+
+                    setState(() {
+                      _isLoading = false;
+                    });
                   },
                   child: Text(widget.submitButtonText ?? "Submit"),
                 )
