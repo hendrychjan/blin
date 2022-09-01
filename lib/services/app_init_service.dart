@@ -10,6 +10,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl_standalone.dart';
 import 'package:jwt_decode/jwt_decode.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class AppInitService {
   static Future<void> init() async {
@@ -23,6 +24,9 @@ class AppInitService {
 
     // Initialize localization and intl
     await _initLocalizations();
+
+    // Initialize the app info
+    await _initAppInfo();
   }
 
   static Future<void> downloadUserData() async {
@@ -41,6 +45,12 @@ class AppInitService {
     String country = locale[1];
     await initializeDateFormatting(AppController.to.appLocale.value);
     await Get.updateLocale(Locale(language, country));
+  }
+
+  static Future<void> _initAppInfo() async {
+    // Get the app info (version and build)
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    AppController.to.appVersion.value = "v${packageInfo.version}";
   }
 
   static Future<void> _initGetStorage() async {

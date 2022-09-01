@@ -13,5 +13,6 @@ class AppController extends GetxController {
   var categories = List<Category>.empty(growable: true).obs;
   var expenses = List<Expense>.empty(growable: true).obs;
   var totalExpenses = 400.obs;
+  var appVersion = ''.obs;
   User? user;
 }

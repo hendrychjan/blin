@@ -22,17 +22,49 @@ class _SettinsPageState extends State<SettinsPage> {
       body: Center(
         child: Column(
           children: [
-            Text(AppController.to.user!.name + AppController.to.user!.id),
-            ElevatedButton(
-              onPressed: () async {
-                // Logout the user locally
-                await User.logoutLocally();
+            Column(
+              children: [
+                Text(AppController.to.user!.name + AppController.to.user!.id),
+                ElevatedButton(
+                  onPressed: () async {
+                    // Logout the user locally
+                    await User.logoutLocally();
 
-                // Go back to login page
-                Get.off(() => const LoginPage());
-              },
-              child: const Text("Log out"),
+                    // Go back to login page
+                    Get.off(() => const LoginPage());
+                  },
+                  child: const Text("Log out"),
+                ),
+              ],
             ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  const Icon(
+                    Icons.warning,
+                    color: Colors.red,
+                  ),
+                  const Text(
+                    "You are using a pre-release version of Blin!",
+                    style: TextStyle(color: Colors.red),
+                  ),
+                  Obx(
+                    () => Text(
+                      AppController.to.appVersion.string,
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 20),
+                    child: Text(
+                      "With ❤️ by Jan Hendrych",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),
