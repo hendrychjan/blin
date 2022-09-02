@@ -18,7 +18,7 @@ class BlinUITheme {
       // Elevated Button
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-            primary: primaryColor,
+            backgroundColor: primaryColor,
             // elevation: 0,
             alignment: Alignment.center,
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
@@ -32,15 +32,16 @@ class BlinUITheme {
       // Text Button
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-            primary: primaryColor,
-            elevation: 0,
-            alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-            textStyle: const TextStyle(
-              fontWeight: FontWeight.normal,
-              color: primaryColor,
-              fontSize: 17,
-            )),
+          foregroundColor: primaryColor,
+          elevation: 0,
+          alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+          textStyle: const TextStyle(
+            fontWeight: FontWeight.normal,
+            color: primaryColor,
+            fontSize: 17,
+          ),
+        ),
       ),
 
       // Input

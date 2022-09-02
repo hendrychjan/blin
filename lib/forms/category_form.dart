@@ -23,7 +23,7 @@ class _CategoryFormState extends State<CategoryForm> {
   final descriptionController = TextEditingController();
   Color colorController = const Color(0xFF194466);
   Color colorSelected = const Color(0xFF194466);
-  String _error = "";
+  final String _error = "";
   bool _isLoading = false;
 
   @override

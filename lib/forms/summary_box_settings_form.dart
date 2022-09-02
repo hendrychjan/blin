@@ -1,4 +1,3 @@
-import 'package:blin/get/app_controller.dart';
 import 'package:blin/get/ui_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

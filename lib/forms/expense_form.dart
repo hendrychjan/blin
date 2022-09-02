@@ -25,7 +25,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
   final costController = TextEditingController();
   final dateController = TextEditingController();
   final categoryController = TextEditingController();
-  String _error = "";
+  final String _error = "";
   bool _isLoading = false;
 
   @override
