@@ -27,6 +27,9 @@ class _EditExpensePageState extends State<EditExpensePage> {
       // Remove the expense from the local storage
       AppController.to.expenses.remove(widget.expense);
 
+      // Update the expenses summary
+      AppController.to.updateExpensesSummary();
+
       // Go back to the home page
       Get.back();
     } else {
@@ -52,6 +55,9 @@ class _EditExpensePageState extends State<EditExpensePage> {
       AppController.to.expenses
           .removeWhere((expense) => expense.id == updated.id);
       AppController.to.expenses.add(updated);
+
+      // Let the expenses summary be updated as well
+      AppController.to.updateExpensesSummary();
 
       // Go back to the home page
       Get.back();

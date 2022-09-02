@@ -26,6 +26,9 @@ class _NewExpensePageState extends State<NewExpensePage> {
       // Save the expense to local storage
       AppController.to.expenses.add(created);
 
+      // Update the expenses summary
+      AppController.to.updateExpensesSummary();
+
       Get.back();
     } else {
       throw "No internet.";

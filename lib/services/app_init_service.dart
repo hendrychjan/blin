@@ -37,6 +37,9 @@ class AppInitService {
     // Download user expenses
     List<Expense> expense = await BlinExpensesService.getAllExpenses();
     AppController.to.expenses.addAll(expense);
+
+    // Calculate the expenses summary
+    AppController.to.updateExpensesSummary();
   }
 
   static Future<void> _initLocalizations() async {
@@ -62,12 +65,15 @@ class AppInitService {
         .writeIfNull("server_url", "https://blin-space.herokuapp.com");
     await GetStorage().writeIfNull("api_token", "");
     await GetStorage().writeIfNull("app_locale", (await findSystemLocale()));
+    await GetStorage().writeIfNull("sum_target", "week");
 
     // Read user preferences (values from get storage) and set
     // accordingly in app controllers
     AppController.to.serverUrl.value = GetStorage().read("server_url");
     AppController.to.apiToken.value = GetStorage().read("api_token");
     AppController.to.appLocale.value = GetStorage().read("app_locale");
+    AppController.to.summaryTarget.value = GetStorage().read("sum_target");
+
     if (AppController.to.apiToken.value.isNotEmpty) {
       AppController.to.isLoggedIn.value = true;
       AppController.to.user =
