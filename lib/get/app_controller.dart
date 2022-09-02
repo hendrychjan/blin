@@ -22,6 +22,10 @@ class AppController extends GetxController {
   var expensesSummary = 0.obs;
   var summaryTarget = "".obs;
 
+  // Settings
+  var showLimit = false.obs;
+  var limitValue = 0.obs;
+
   void updateExpensesSummary() {
     List<Expense> expensesFiltered = [];
 

@@ -1,3 +1,4 @@
+import 'package:blin/components/summary_box.dart';
 import 'package:blin/get/app_controller.dart';
 import 'package:blin/get/ui_controller.dart';
 import 'package:blin/models/expense.dart';
@@ -50,30 +51,7 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: SizedBox(
-              width: double.infinity,
-              child: Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(vertical: 30),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Obx(
-                  () => Text(
-                    "${AppController.to.expensesSummary} Kč",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 33,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          const SummaryBox(),
           Obx(
             () {
               // Filter the expenses for the overview list

@@ -66,6 +66,8 @@ class AppInitService {
     await GetStorage().writeIfNull("api_token", "");
     await GetStorage().writeIfNull("app_locale", (await findSystemLocale()));
     await GetStorage().writeIfNull("sum_target", "week");
+    await GetStorage().writeIfNull("show_limit", false);
+    await GetStorage().writeIfNull("limit_value", 0);
 
     // Read user preferences (values from get storage) and set
     // accordingly in app controllers
@@ -73,6 +75,8 @@ class AppInitService {
     AppController.to.apiToken.value = GetStorage().read("api_token");
     AppController.to.appLocale.value = GetStorage().read("app_locale");
     AppController.to.summaryTarget.value = GetStorage().read("sum_target");
+    AppController.to.showLimit.value = GetStorage().read("show_limit");
+    AppController.to.limitValue.value = GetStorage().read("limit_value");
 
     if (AppController.to.apiToken.value.isNotEmpty) {
       AppController.to.isLoggedIn.value = true;

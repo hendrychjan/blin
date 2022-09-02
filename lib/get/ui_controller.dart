@@ -1,5 +1,6 @@
 import 'package:blin/get/app_controller.dart';
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:get/get.dart';
@@ -26,6 +27,29 @@ class UiController extends GetxController {
         return NumberFormat.currency(locale: AppController.to.appLocale.value)
             .format(value);
     }
+  }
+
+  static Widget renderSwitch({
+    required bool value,
+    required Function onChange,
+    required String hint,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 5, right: 5),
+            child: Text(hint),
+          ),
+          CupertinoSwitch(
+            value: value,
+            onChanged: (v) => onChange(v),
+            activeColor: Get.theme.primaryColor,
+          ),
+        ],
+      ),
+    );
   }
 
   static Widget renderSelect({
