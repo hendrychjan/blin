@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class UiController extends GetxController {
   static UiController get to => Get.find();
@@ -81,12 +82,13 @@ class UiController extends GetxController {
     required String hint,
     required TextEditingController contoller,
     required List<String> validationRules,
+    DateTimePickerType type = DateTimePickerType.dateTime,
     Icon icon = const Icon(Icons.calendar_today),
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: DateTimePicker(
-        type: DateTimePickerType.dateTime,
+        type: type,
         controller: contoller,
         firstDate: DateTime(1900),
         lastDate: DateTime(2100),
@@ -178,6 +180,69 @@ class UiController extends GetxController {
           ),
         ),
       ],
+    );
+  }
+
+  static Widget renderMultiSelect({
+    required String hint,
+    required List<Map> items,
+    required Function onChanged,
+    required List selectedItems,
+    required int selectedLength,
+    Icon? icon,
+    required BuildContext context,
+  }) {
+    List<MultiSelectItem> itemsParsed =
+        items.map((e) => MultiSelectItem(e["value"], e["text"])).toList();
+
+    String infoText = "Selected: $selectedLength";
+    if (selectedLength == 0) infoText = "No items selected";
+    if (selectedLength == itemsParsed.length) infoText = "Selected: all";
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Column(
+        children: [
+          ElevatedButton(
+            onPressed: () async => await showModalBottomSheet(
+              isScrollControlled: true,
+              context: context,
+              builder: (ctx) {
+                return MultiSelectBottomSheet(
+                  title: Text(
+                    hint,
+                    style: TextStyle(
+                      color: Get.theme.primaryColor,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  selectedColor: Get.theme.primaryColor,
+                  cancelText: const Text(
+                    "Cancel",
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
+                  confirmText: const Text("Confirm"),
+                  items: itemsParsed,
+                  initialValue: selectedItems,
+                  onConfirm: (values) => onChanged(values),
+                  maxChildSize: 0.8,
+                );
+              },
+            ),
+            child: Text(hint),
+          ),
+          Text(
+            infoText,
+            style: const TextStyle(
+              color: Colors.grey,
+              fontSize: 12,
+            ),
+          ),
+        ],
+      ),
     );
   }
 

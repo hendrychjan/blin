@@ -1,14 +1,13 @@
+import 'package:blin/components/expenses_list.dart';
 import 'package:blin/components/summary_box.dart';
 import 'package:blin/get/app_controller.dart';
-import 'package:blin/get/ui_controller.dart';
 import 'package:blin/models/expense.dart';
 import 'package:blin/pages/categories/categories_overview_page.dart';
-import 'package:blin/pages/expenses/edit_expense_page.dart';
+import 'package:blin/pages/expenses/expenses_overview_page.dart';
 import 'package:blin/pages/expenses/new_expense_page.dart';
 import 'package:blin/pages/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -18,7 +17,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final _dateFormat = DateFormat("EEEE d.M.y", 'cs_CZ');
+  void _handlePopupMenuNavigate(String value) {
+    switch (value) {
+      case "settings":
+        Get.to(() => const SettinsPage());
+        return;
+      case "categories":
+        Get.to(() => const CategoriesOverviewPage());
+        return;
+      case "expenses":
+        Get.to(() => const ExpensesOverviewPage());
+        return;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,17 +38,40 @@ class _HomePageState extends State<HomePage> {
         key: UniqueKey(),
         title: const Text('Home'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.align_horizontal_left),
-            onPressed: () {
-              Get.to(() => const CategoriesOverviewPage());
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              Get.to(() => const SettinsPage());
-            },
+          PopupMenuButton(
+            onSelected: _handlePopupMenuNavigate,
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: "settings",
+                child: Row(children: const [
+                  Padding(
+                    padding: EdgeInsets.only(right: 8),
+                    child: Icon(Icons.settings),
+                  ),
+                  Text("Settings"),
+                ]),
+              ),
+              PopupMenuItem(
+                value: "categories",
+                child: Row(children: const [
+                  Padding(
+                    padding: EdgeInsets.only(right: 8),
+                    child: Icon(Icons.category),
+                  ),
+                  Text("Categories"),
+                ]),
+              ),
+              PopupMenuItem(
+                value: "expenses",
+                child: Row(children: const [
+                  Padding(
+                    padding: EdgeInsets.only(right: 8),
+                    child: Icon(Icons.history),
+                  ),
+                  Text("All expenses"),
+                ]),
+              ),
+            ],
           ),
         ],
       ),
@@ -72,49 +106,12 @@ class _HomePageState extends State<HomePage> {
               // Otherwise, show the list of expenses
               else {
                 return Expanded(
-                  child: ListView.builder(
-                    itemCount: expenses.length,
-                    itemBuilder: (context, index) {
-                      final expense = expenses[index];
-                      return GestureDetector(
-                        onTap: () => Get.to(
-                          () => EditExpensePage(expense: expense),
-                        ),
-                        child: Card(
-                          child: ListTile(
-                            title: Text(
-                              expense.title,
-                            ),
-                            subtitle: Text(
-                              _dateFormat.format(expense.date),
-                              style: TextStyle(
-                                color: Colors.grey[800],
-                              ),
-                            ),
-                            tileColor: Colors.grey[50],
-                            trailing: Text(
-                              UiController.formatCurrency(expense.cost + .0),
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Colors.grey[800],
-                              ),
-                            ),
-                            textColor: UiController.hexStringToColor(
-                                AppController
-                                    .to.categories
-                                    .firstWhere(
-                                        (c) => c.id == expense.categoryId)
-                                    .color),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                );
+                    child: ExpensesList(
+                  expenses: expenses,
+                ));
               }
             },
-          ),
+          )
         ],
       ),
     );

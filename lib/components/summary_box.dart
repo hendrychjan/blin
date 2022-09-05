@@ -12,7 +12,7 @@ class SummaryBox extends StatefulWidget {
 }
 
 class _SummaryBoxState extends State<SummaryBox> {
-  void _displaySettingsDialog(BuildContext context) async {
+  void _displaySettingsDialog() async {
     await Get.dialog(
       AlertDialog(
         contentPadding: const EdgeInsets.all(16),
@@ -45,7 +45,7 @@ class _SummaryBoxState extends State<SummaryBox> {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: GestureDetector(
-        onTap: () => _displaySettingsDialog(context),
+        onTap: _displaySettingsDialog,
         child: SizedBox(
           width: double.infinity,
           child: Container(
