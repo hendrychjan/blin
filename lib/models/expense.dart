@@ -1,11 +1,29 @@
 import 'dart:convert' as conv;
+import 'package:blin/get/app_controller.dart';
+import 'package:blin/services/hive/hive_expense_service.dart';
+import 'package:hive/hive.dart';
 
-class Expense {
+// hive_generate command: flutter packages pub run build_runner build
+part 'expense.g.dart';
+
+@HiveType(typeId: 2)
+class Expense extends HiveObject {
+  @HiveField(0)
   String id;
+
+  @HiveField(1)
   String title;
+
+  @HiveField(2)
   String? description;
-  int cost;
+
+  @HiveField(3)
+  double cost;
+
+  @HiveField(4)
   DateTime date;
+
+  @HiveField(5)
   String categoryId;
 
   Expense({
@@ -21,9 +39,9 @@ class Expense {
         id: map["id"],
         title: map["title"],
         description: map["description"] ?? "",
-        cost: map["cost"],
+        cost: double.parse(map["cost"]),
         date: DateTime.parse(map["date"]).toLocal(),
-        categoryId: map["categoryId"] ?? map["category"],
+        categoryId: map["categoryId"],
       );
 
   factory Expense.fromJson(String json) =>
@@ -34,52 +52,83 @@ class Expense {
         "title": title,
         "description": description,
         "cost": cost,
-        "date": "${date.toIso8601String()}Z",
-        "category": categoryId,
+        "date": date.toUtc().toIso8601String(),
+        "categoryId": categoryId,
       };
 
   String toJson() => conv.json.encode(toMap());
 
-  static List<Expense> filterByThisWeek(List<Expense> base,
-      {bool sort = true}) {
-    DateTime now = DateTime.now();
-
-    // Get the date of the first day of the current week
-    DateTime firstDayOfWeek = DateTime(now.year, now.month, now.day)
-        .subtract(Duration(days: now.weekday - 1 + 1));
-
-    // Get the date of the last day of the current week
-    DateTime lastDayOfWeek = DateTime(now.year, now.month, now.day)
-        .add(Duration(days: 7 - now.weekday + 1));
-
-    // Filter the expenses by the current week
-    List<Expense> filtered = base.where((expense) {
-      return expense.date.isAfter(firstDayOfWeek) &&
-          expense.date.isBefore(lastDayOfWeek);
-    }).toList();
-
-    // Sort the filtered expenses by date
-    if (sort) {
-      filtered.sort((a, b) => a.date.compareTo(b.date));
-    }
-
-    return filtered;
+  static List<Expense> getAll([Map? filter]) {
+    return HiveExpenseService.getExpenses(filter);
   }
 
-  static List<Expense> filterByThisMonth(List<Expense> base,
-      {bool sort = true}) {
-    DateTime now = DateTime.now();
+  Future<void> create() async {
+    // Create a new, unique id
+    id = DateTime.now().millisecondsSinceEpoch.toString();
 
-    // Filter the expenses by the current month
-    List<Expense> filtered = base.where((expense) {
-      return expense.date.year == now.year && expense.date.month == now.month;
-    }).toList();
+    // DB create
+    await HiveExpenseService.addExpense(this);
 
-    // Sort the filtered expenses by date
-    if (sort) {
-      filtered.sort((a, b) => a.date.compareTo(b.date));
-    }
-
-    return filtered;
+    // Run the AppController sync hook
+    AppController.to.updateExpensesSummary();
   }
+
+  Future<void> update() async {
+    // DB update
+    await HiveExpenseService.updateExpense(this);
+
+    // Run the AppController sync hook
+    AppController.to.updateExpensesSummary();
+  }
+
+  Future<void> remove() async {
+    // DB delete
+    await HiveExpenseService.deleteExpense(this);
+
+    // Run the AppController sync hook
+    AppController.to.updateExpensesSummary();
+  }
+
+  // static List<Expense> filterByThisWeek(List<Expense> base,
+  //     {bool sort = true}) {
+  //   DateTime now = DateTime.now();
+
+  //   // Get the date of the first day of the current week
+  //   DateTime firstDayOfWeek = DateTime(now.year, now.month, now.day)
+  //       .subtract(Duration(days: now.weekday - 1 + 1));
+
+  //   // Get the date of the last day of the current week
+  //   DateTime lastDayOfWeek = DateTime(now.year, now.month, now.day)
+  //       .add(Duration(days: 7 - now.weekday + 1));
+
+  //   // Filter the expenses by the current week
+  //   List<Expense> filtered = base.where((expense) {
+  //     return expense.date.isAfter(firstDayOfWeek) &&
+  //         expense.date.isBefore(lastDayOfWeek);
+  //   }).toList();
+
+  //   // Sort the filtered expenses by date
+  //   if (sort) {
+  //     filtered.sort((a, b) => a.date.compareTo(b.date));
+  //   }
+
+  //   return filtered;
+  // }
+
+  // static List<Expense> filterByThisMonth(List<Expense> base,
+  //     {bool sort = true}) {
+  //   DateTime now = DateTime.now();
+
+  //   // Filter the expenses by the current month
+  //   List<Expense> filtered = base.where((expense) {
+  //     return expense.date.year == now.year && expense.date.month == now.month;
+  //   }).toList();
+
+  //   // Sort the filtered expenses by date
+  //   if (sort) {
+  //     filtered.sort((a, b) => a.date.compareTo(b.date));
+  //   }
+
+  //   return filtered;
+  // }
 }

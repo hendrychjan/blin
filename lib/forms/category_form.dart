@@ -23,8 +23,6 @@ class _CategoryFormState extends State<CategoryForm> {
   final descriptionController = TextEditingController();
   Color colorController = const Color(0xFF194466);
   Color colorSelected = const Color(0xFF194466);
-  final String _error = "";
-  bool _isLoading = false;
 
   @override
   void initState() {
@@ -70,32 +68,20 @@ class _CategoryFormState extends State<CategoryForm> {
               });
             },
           ),
-          (!_isLoading)
-              ? ElevatedButton(
-                  onPressed: () async {
-                    // Validate the form
-                    if (!formKey.currentState!.validate()) return;
+          ElevatedButton(
+            onPressed: () async {
+              // Validate the form
+              if (!formKey.currentState!.validate()) return;
 
-                    setState(() {
-                      _isLoading = true;
-                    });
-
-                    await widget.handleSubmit({
-                      "title": titleController.text,
-                      "description": descriptionController.text,
-                      "color": UiController.colorToHexString(colorSelected),
-                    });
-
-                    setState(() {
-                      _isLoading = false;
-                    });
-                  },
-                  child: Text(widget.submitButtonText ?? "Submit"),
-                )
-              : const CircularProgressIndicator(),
-          Text(
-            _error,
-            style: const TextStyle(color: Colors.red),
+              // Submit the form
+              await widget.handleSubmit(Category(
+                id: widget.initialState?.id ?? "0",
+                title: titleController.text,
+                description: descriptionController.text,
+                color: UiController.colorToHexString(colorSelected),
+              ));
+            },
+            child: Text(widget.submitButtonText ?? "Submit"),
           ),
         ],
       ),

@@ -1,6 +1,4 @@
 import 'package:blin/get/app_controller.dart';
-import 'package:blin/models/user.dart';
-import 'package:blin/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -23,19 +21,7 @@ class _SettinsPageState extends State<SettinsPage> {
         child: Column(
           children: [
             Column(
-              children: [
-                Text(AppController.to.user!.name + AppController.to.user!.id),
-                ElevatedButton(
-                  onPressed: () async {
-                    // Logout the user locally
-                    await User.logoutLocally();
-
-                    // Go back to login page
-                    Get.off(() => const LoginPage());
-                  },
-                  child: const Text("Log out"),
-                ),
-              ],
+              children: const [],
             ),
             Expanded(
               child: Column(

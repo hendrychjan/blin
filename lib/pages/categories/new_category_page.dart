@@ -1,8 +1,5 @@
 import 'package:blin/forms/category_form.dart';
-import 'package:blin/get/app_controller.dart';
 import 'package:blin/models/category.dart';
-import 'package:blin/services/blin_api/blin_categories_service.dart';
-import 'package:blin/services/http_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -14,24 +11,9 @@ class NewCategoryPage extends StatefulWidget {
 }
 
 class _NewCategoryPageState extends State<NewCategoryPage> {
-  Future<void> _handleSubmit(Map formValues) async {
-    // Check if the internet connection is available
-    bool connected = await HttpService.checkInternetConnection();
-
-    // If yes, try to create the category
-    if (connected) {
-      // Create the category
-      Category created =
-          await BlinCategoriesService.createNewCategory(formValues);
-
-      // Save the category to the local storage
-      AppController.to.categories.add(created);
-
-      // Go to the categories overview page
-      Get.back();
-    } else {
-      throw "No internet.";
-    }
+  Future<void> _handleSubmit(Category newCategory) async {
+    await newCategory.create();
+    Get.back();
   }
 
   @override

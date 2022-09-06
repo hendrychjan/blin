@@ -1,6 +1,4 @@
-import 'package:blin/get/app_controller.dart';
 import 'package:blin/pages/home_page.dart';
-import 'package:blin/pages/login_page.dart';
 import 'package:blin/services/app_init_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,17 +17,11 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(
       const Duration(seconds: 2),
       () => AppInitService.init(),
-    ).then((v) {
-      if (AppController.to.isLoggedIn.value) {
-        Get.off(
-          () => const HomePage(),
-        );
-      } else {
-        Get.off(
-          () => const LoginPage(),
-        );
-      }
-    });
+    ).then(
+      (v) => Get.off(
+        () => const HomePage(),
+      ),
+    );
   }
 
   @override

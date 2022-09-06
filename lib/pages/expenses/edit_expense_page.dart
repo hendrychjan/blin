@@ -1,8 +1,5 @@
 import 'package:blin/forms/expense_form.dart';
-import 'package:blin/get/app_controller.dart';
 import 'package:blin/models/expense.dart';
-import 'package:blin/services/blin_api/blin_expenses_service.dart';
-import 'package:blin/services/http_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,54 +13,13 @@ class EditExpensePage extends StatefulWidget {
 
 class _EditExpensePageState extends State<EditExpensePage> {
   Future<void> _handleDelete() async {
-    // Check if the internet connection is available
-    bool connected = await HttpService.checkInternetConnection();
-
-    // If yes, try to delete the expense
-    if (connected) {
-      // Delete the expense
-      await BlinExpensesService.deleteExpense(widget.expense.id);
-
-      // Remove the expense from the local storage
-      AppController.to.expenses.remove(widget.expense);
-
-      // Update the expenses summary
-      AppController.to.updateExpensesSummary();
-
-      // Go back to the home page
-      Get.back();
-    } else {
-      throw "No internet.";
-    }
+    await widget.expense.delete();
+    Get.back();
   }
 
-  Future<void> _handleUpdate(Map<String, dynamic> form) async {
-    // Check if the internet connection is available
-    bool connected = await HttpService.checkInternetConnection();
-
-    // If yes, try to update the expense
-    if (connected) {
-      // Remap the reference fields to their IDs
-      form["categoryId"] = form["category"];
-      form.remove("category");
-
-      // Update the expense
-      Expense updated =
-          await BlinExpensesService.updateExpense(form, widget.expense.id);
-
-      // Update the expense in AppController list of expenses
-      AppController.to.expenses
-          .removeWhere((expense) => expense.id == updated.id);
-      AppController.to.expenses.add(updated);
-
-      // Let the expenses summary be updated as well
-      AppController.to.updateExpensesSummary();
-
-      // Go back to the home page
-      Get.back();
-    } else {
-      throw "No internet.";
-    }
+  Future<void> _handleUpdate(Expense updatedExpense) async {
+    await updatedExpense.update();
+    Get.back();
   }
 
   @override

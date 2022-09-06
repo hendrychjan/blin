@@ -1,8 +1,5 @@
 import 'package:blin/forms/category_form.dart';
-import 'package:blin/get/app_controller.dart';
 import 'package:blin/models/category.dart';
-import 'package:blin/services/blin_api/blin_categories_service.dart';
-import 'package:blin/services/http_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,44 +13,13 @@ class EditCategoryPage extends StatefulWidget {
 
 class _EditCategoryPageState extends State<EditCategoryPage> {
   Future<void> _handleDelete() async {
-    // Check if the internet connection is available
-    bool connected = await HttpService.checkInternetConnection();
-
-    // If yes, try to delete the category
-    if (connected) {
-      // Delete the category
-      await BlinCategoriesService.deleteCategory(widget.category.id);
-
-      // Remove the category from the local storage
-      AppController.to.categories.remove(widget.category);
-
-      // Go to the categories overview page
-      Get.back();
-    } else {
-      throw "No internet.";
-    }
+    await widget.category.delete();
+    Get.back();
   }
 
-  Future<void> _handleUpdate(Map<String, dynamic> form) async {
-    // Check if the internet connection is available
-    bool connected = await HttpService.checkInternetConnection();
-
-    // If yes, try to update the category
-    if (connected) {
-      // Update the category
-      Category updated =
-          await BlinCategoriesService.updateCategory(form, widget.category.id);
-
-      // Update the category in AppController list of categories
-      AppController.to.categories
-          .removeWhere((category) => category.id == updated.id);
-      AppController.to.categories.add(updated);
-
-      // Go to the categories overview page
-      Get.back();
-    } else {
-      throw "No internet.";
-    }
+  Future<void> _handleUpdate(Category updatedCategory) async {
+    await updatedCategory.update();
+    Get.back();
   }
 
   @override

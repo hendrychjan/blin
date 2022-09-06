@@ -19,46 +19,10 @@ class _ExpensesOverviewPageState extends State<ExpensesOverviewPage> {
   void _filterExpenses() {
     List<Expense> filteredExpenses = [];
 
-    // Filter by category
-    filteredExpenses = AppController.to.expenses
-        .where((e) => (_filter["categories"] as List).contains(e.categoryId))
-        .toList();
-
-    // Filter by date
-    if (_filter["range"] == "alltime") {
-      // Do nothing
-    } else if (_filter["range"] == "year") {
-      filteredExpenses = filteredExpenses
-          .where((e) => e.date.year == _filter["rangeTargetDate"].year)
-          .toList();
-    } else if (_filter["range"] == "month") {
-      filteredExpenses = filteredExpenses
-          .where((e) =>
-              e.date.year == _filter["rangeTargetDate"].year &&
-              e.date.month == _filter["rangeTargetDate"].month)
-          .toList();
-    } else if (_filter["range"] == "week") {
-      DateTime base = _filter["rangeTargetDate"];
-
-      // Get the date of the first day of the current week
-      DateTime firstDayOfWeek = DateTime(base.year, base.month, base.day)
-          .subtract(Duration(days: base.weekday - 1 + 1));
-
-      // Get the date of the last day of the current week
-      DateTime lastDayOfWeek = DateTime(base.year, base.month, base.day)
-          .add(Duration(days: 7 - base.weekday + 1));
-
-      // Filter the expenses by the current week
-      filteredExpenses = filteredExpenses.where((expense) {
-        return expense.date.isAfter(firstDayOfWeek) &&
-            expense.date.isBefore(lastDayOfWeek);
-      }).toList();
-    } else if (_filter["range"] == "custom") {
-      filteredExpenses = filteredExpenses
-          .where((e) =>
-              e.date.isAfter(_filter["customRangeDateFrom"]) &&
-              e.date.isBefore(_filter["customRangeDateTo"]))
-          .toList();
+    if (_filter.isEmpty) {
+      filteredExpenses = Expense.getAll();
+    } else {
+      filteredExpenses = Expense.getAll(_filter);
     }
 
     setState(() {

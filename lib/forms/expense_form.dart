@@ -1,5 +1,6 @@
 import 'package:blin/get/app_controller.dart';
 import 'package:blin/get/ui_controller.dart';
+import 'package:blin/models/category.dart';
 import 'package:blin/models/expense.dart';
 import 'package:flutter/material.dart';
 
@@ -25,8 +26,6 @@ class _ExpenseFormState extends State<ExpenseForm> {
   final costController = TextEditingController();
   final dateController = TextEditingController();
   final categoryController = TextEditingController();
-  final String _error = "";
-  bool _isLoading = false;
 
   @override
   void initState() {
@@ -38,10 +37,10 @@ class _ExpenseFormState extends State<ExpenseForm> {
       descriptionController.text = widget.initialState!.description ?? "";
       costController.text = widget.initialState!.cost.toString();
       dateController.text = widget.initialState!.date.toString();
-      categoryController.text = widget.initialState!.categoryId;
+      categoryController.text = widget.initialState!.categoryId.toString();
     } else {
       dateController.text = DateTime.now().toString();
-      categoryController.text = AppController.to.categories.first.id;
+      categoryController.text = AppController.to.categories.first.id.toString();
     }
   }
 
@@ -81,43 +80,29 @@ class _ExpenseFormState extends State<ExpenseForm> {
             items: AppController.to.categories
                 .map((c) => {"text": c.title, "value": c.id})
                 .toList(),
-            onChanged: (String selected) {
+            onChanged: (Category selected) {
               setState(() {
-                categoryController.text = selected;
+                categoryController.text = selected.id;
               });
             },
             icon: const Icon(Icons.category),
           ),
-          (!_isLoading)
-              ? ElevatedButton(
-                  onPressed: () async {
-                    // Validate the form
-                    if (!formKey.currentState!.validate()) return;
+          ElevatedButton(
+            onPressed: () async {
+              // Validate the form
+              if (!formKey.currentState!.validate()) return;
 
-                    setState(() {
-                      _isLoading = true;
-                    });
-
-                    await widget.handleSubmit({
-                      "title": titleController.text,
-                      "description": descriptionController.text,
-                      "cost": int.parse(costController.text),
-                      "date": DateTime.parse(dateController.text)
-                          .toUtc()
-                          .toIso8601String(),
-                      "category": categoryController.text,
-                    });
-
-                    setState(() {
-                      _isLoading = false;
-                    });
-                  },
-                  child: Text(widget.submitButtomText ?? "Submit"),
-                )
-              : const CircularProgressIndicator(),
-          Text(
-            _error,
-            style: const TextStyle(color: Colors.red),
+              // Submit the form
+              await widget.handleSubmit(Expense(
+                id: widget.initialState?.id ?? "0",
+                title: titleController.text,
+                description: descriptionController.text,
+                cost: double.parse(costController.text),
+                date: DateTime.parse(dateController.text),
+                categoryId: categoryController.text,
+              ));
+            },
+            child: Text(widget.submitButtomText ?? "Submit"),
           ),
         ],
       ),

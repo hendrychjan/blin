@@ -33,6 +33,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    AppController.to.updateExpensesSummary();
     return Scaffold(
       appBar: AppBar(
         key: UniqueKey(),
@@ -88,18 +89,33 @@ class _HomePageState extends State<HomePage> {
           const SummaryBox(),
           Obx(
             () {
+              // Connect an update hook
+              AppController.to.expensesSummary.value;
+
+              final DateTime today = DateTime(
+                DateTime.now().year,
+                DateTime.now().month,
+                DateTime.now().day,
+              );
+
               // Filter the expenses for the overview list
               List<Expense> expenses = [];
               if (AppController.to.summaryTarget.value == "week") {
                 expenses.addAll(
-                    Expense.filterByThisWeek(AppController.to.expenses));
+                  Expense.getAll(
+                    {"range": "week", "rangeTargetDate": today},
+                  ),
+                );
               } else if (AppController.to.summaryTarget.value == "month") {
                 expenses.addAll(
-                    Expense.filterByThisMonth(AppController.to.expenses));
+                  Expense.getAll(
+                    {"range": "month", "rangeTargetDate": today},
+                  ),
+                );
               }
 
               // If the list is empty, show a message
-              if (AppController.to.expenses.isEmpty) {
+              if (expenses.isEmpty) {
                 return const Text("No expenses");
               }
 
