@@ -1,6 +1,7 @@
 import 'dart:convert' as conv;
 import 'package:blin/get/app_controller.dart';
 import 'package:blin/services/hive/hive_category_service.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:hive/hive.dart';
 
 // hive_generate command: flutter packages pub run build_runner build
@@ -73,10 +74,34 @@ class Category extends HiveObject {
   }
 
   Future<void> remove() async {
-    // DB remove
-    await HiveCategoryService.deleteCategory(this);
+    // Check - the default category cannot be removed
+    if (id != AppController.to.defaultCategoryId.value) {
+      // DB remove
+      await HiveCategoryService.deleteCategory(this);
 
-    // AppController update
-    AppController.to.categories.removeWhere((c) => c.id == id);
+      // AppController update
+      AppController.to.categories.removeWhere((c) => c.id == id);
+    }
+  }
+
+  static void ensureDefault() async {
+    if (AppController.to.categories.isEmpty) {
+      Category category = Category(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        title: "Default",
+        description: "Default category",
+        color: "#FF194466",
+      );
+
+      // DB create
+      await HiveCategoryService.addCategory(category);
+
+      // GetStorage update
+      await GetStorage().write("default_category_id", category.id);
+
+      // AppController update
+      AppController.to.categories.add(category);
+      AppController.to.defaultCategoryId.value = category.id;
+    }
   }
 }

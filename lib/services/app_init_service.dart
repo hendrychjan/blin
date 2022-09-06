@@ -38,7 +38,11 @@ class AppInitService {
   }
 
   static Future<void> _loadHiveData() async {
+    // Load data to app controller
     AppController.to.categories.addAll((await Category.getAll()));
+
+    // Create the default values
+    Category.ensureDefault();
   }
 
   static Future<void> _initLocalizations() async {
@@ -64,6 +68,7 @@ class AppInitService {
     await GetStorage().writeIfNull("sum_target", "week");
     await GetStorage().writeIfNull("show_limit", false);
     await GetStorage().writeIfNull("limit_value", 0);
+    await GetStorage().writeIfNull("default_category_id", "0");
 
     // Read user preferences (values from get storage) and set
     // accordingly in app controllers
@@ -71,5 +76,7 @@ class AppInitService {
     AppController.to.summaryTarget.value = GetStorage().read("sum_target");
     AppController.to.showLimit.value = GetStorage().read("show_limit");
     AppController.to.limitValue.value = GetStorage().read("limit_value");
+    AppController.to.defaultCategoryId.value =
+        GetStorage().read("default_category_id");
   }
 }

@@ -13,6 +13,7 @@ class AppController extends GetxController {
   var categories = List<Category>.empty(growable: true).obs;
   var expensesSummary = 0.0.obs;
   var summaryTarget = "".obs;
+  var defaultCategoryId = "0".obs;
 
   // Settings
   var showLimit = false.obs;

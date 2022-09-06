@@ -1,4 +1,5 @@
 import 'package:blin/forms/category_form.dart';
+import 'package:blin/get/app_controller.dart';
 import 'package:blin/models/category.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,6 +13,15 @@ class EditCategoryPage extends StatefulWidget {
 }
 
 class _EditCategoryPageState extends State<EditCategoryPage> {
+  late bool isDefaultCatgory;
+
+  @override
+  void initState() {
+    super.initState();
+    isDefaultCatgory =
+        widget.category.id == AppController.to.defaultCategoryId.value;
+  }
+
   Future<void> _handleDelete() async {
     await widget.category.delete();
     Get.back();
@@ -29,10 +39,12 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
         key: UniqueKey(),
         title: const Text('Edit category'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: _handleDelete,
-          )
+          if (!isDefaultCatgory)
+            IconButton(
+              key: UniqueKey(),
+              icon: const Icon(Icons.delete),
+              onPressed: _handleDelete,
+            ),
         ],
       ),
       body: Padding(
