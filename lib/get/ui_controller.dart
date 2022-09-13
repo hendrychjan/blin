@@ -57,6 +57,7 @@ class UiController extends GetxController {
     required String hint,
     required List<Map> items,
     required Function onChanged,
+    required String? value,
     Icon? icon,
   }) {
     return Padding(
@@ -66,7 +67,7 @@ class UiController extends GetxController {
           prefixIcon: icon,
           labelText: hint,
         ),
-        value: items.first["value"],
+        value: value ?? items.first["value"],
         items: items.map((item) {
           return DropdownMenuItem(
             value: item["value"],

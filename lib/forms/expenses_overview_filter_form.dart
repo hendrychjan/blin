@@ -77,6 +77,7 @@ class _ExpensesOverviewFilterFormState
           UiController.renderSelect(
             hint: "Time range",
             items: _timeRangeOptions,
+            value: _rangeController.text,
             onChanged: (String selected) => setState(
               () {
                 _rangeController.text = selected;

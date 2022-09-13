@@ -1,5 +1,6 @@
 import 'dart:convert' as conv;
 import 'package:blin/get/app_controller.dart';
+import 'package:blin/models/expense.dart';
 import 'package:blin/services/hive/hive_category_service.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hive/hive.dart';
@@ -75,13 +76,19 @@ class Category extends HiveObject {
 
   Future<void> remove() async {
     // Check - the default category cannot be removed
-    if (id != AppController.to.defaultCategoryId.value) {
-      // DB remove
-      await HiveCategoryService.deleteCategory(this);
+    if (id == AppController.to.defaultCategoryId.value) return;
 
-      // AppController update
-      AppController.to.categories.removeWhere((c) => c.id == id);
-    }
+    // Check - the category cannot be removed if it has expenses
+    List<Expense> expenses = Expense.getAll({
+      "categories": [id]
+    });
+    if (expenses.isNotEmpty) throw "Cannot delete a category with expenses";
+
+    // DB remove
+    await HiveCategoryService.deleteCategory(this);
+
+    // AppController update
+    AppController.to.categories.removeWhere((c) => c.id == id);
   }
 
   static void ensureDefault() async {

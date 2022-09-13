@@ -12,8 +12,8 @@ class EditExpensePage extends StatefulWidget {
 }
 
 class _EditExpensePageState extends State<EditExpensePage> {
-  Future<void> _handleDelete() async {
-    await widget.expense.delete();
+  Future<void> _handleRemove() async {
+    await widget.expense.remove();
     Get.back();
   }
 
@@ -31,7 +31,7 @@ class _EditExpensePageState extends State<EditExpensePage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.delete),
-            onPressed: _handleDelete,
+            onPressed: _handleRemove,
           ),
         ],
       ),

@@ -11,6 +11,7 @@ class AppController extends GetxController {
 
   // Data state
   var categories = List<Category>.empty(growable: true).obs;
+  var expenses = List<Expense>.empty(growable: true).obs;
   var expensesSummary = 0.0.obs;
   var summaryTarget = "".obs;
   var defaultCategoryId = "0".obs;
@@ -39,6 +40,13 @@ class AppController extends GetxController {
         Expense.getAll({"range": "month", "rangeTargetDate": today}),
       );
     }
+
+    // Sort the expenses from newest to oldest
+    expensesFiltered.sort((a, b) => b.date.compareTo(a.date));
+
+    // Save the target expenses
+    AppController.to.expenses.clear();
+    AppController.to.expenses.addAll(expensesFiltered);
 
     // Sum the target expenses
     expensesSummary.value =

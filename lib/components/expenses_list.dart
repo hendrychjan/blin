@@ -28,31 +28,32 @@ class _ExpensesListState extends State<ExpensesList> {
             () => EditExpensePage(expense: expense),
           ),
           child: Card(
+              key: UniqueKey(),
               child: ListTile(
-            title: Text(
-              expense.title,
-            ),
-            subtitle: Text(
-              _dateFormat.format(expense.date),
-              style: TextStyle(
-                color: Colors.grey[800],
-              ),
-            ),
-            tileColor: Colors.grey[50],
-            trailing: Text(
-              UiController.formatCurrency(expense.cost + .0),
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-                color: Colors.grey[800],
-              ),
-            ),
-            textColor: UiController.hexStringToColor(
-              AppController.to.categories
-                  .firstWhere((c) => c.id == expense.categoryId)
-                  .color,
-            ),
-          )),
+                title: Text(
+                  expense.title,
+                ),
+                subtitle: Text(
+                  _dateFormat.format(expense.date),
+                  style: TextStyle(
+                    color: Colors.grey[800],
+                  ),
+                ),
+                tileColor: Colors.grey[50],
+                trailing: Text(
+                  UiController.formatCurrency(expense.cost + .0),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Colors.grey[800],
+                  ),
+                ),
+                textColor: UiController.hexStringToColor(
+                  AppController.to.categories
+                      .firstWhere((c) => c.id == expense.categoryId)
+                      .color,
+                ),
+              )),
         );
       },
     );

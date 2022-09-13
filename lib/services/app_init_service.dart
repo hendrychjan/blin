@@ -39,7 +39,31 @@ class AppInitService {
 
   static Future<void> _loadHiveData() async {
     // Load data to app controller
+
+    // Categories
     AppController.to.categories.addAll((await Category.getAll()));
+
+    // Expenses
+    DateTime today = DateTime(
+      DateTime.now().year,
+      DateTime.now().month,
+      DateTime.now().day,
+    );
+    List<Expense> expenses = [];
+    if (AppController.to.summaryTarget.value == "week") {
+      expenses.addAll(
+        Expense.getAll(
+          {"range": "week", "rangeTargetDate": today},
+        ),
+      );
+    } else if (AppController.to.summaryTarget.value == "month") {
+      expenses.addAll(
+        Expense.getAll(
+          {"range": "month", "rangeTargetDate": today},
+        ),
+      );
+    }
+    AppController.to.expenses.addAll(expenses);
 
     // Create the default values
     Category.ensureDefault();

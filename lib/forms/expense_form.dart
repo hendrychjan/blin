@@ -37,7 +37,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
       descriptionController.text = widget.initialState!.description ?? "";
       costController.text = widget.initialState!.cost.toString();
       dateController.text = widget.initialState!.date.toString();
-      categoryController.text = widget.initialState!.categoryId.toString();
+      categoryController.text = widget.initialState!.categoryId;
     } else {
       dateController.text = DateTime.now().toString();
       categoryController.text = AppController.to.categories.first.id.toString();
@@ -80,11 +80,12 @@ class _ExpenseFormState extends State<ExpenseForm> {
             items: AppController.to.categories
                 .map((c) => {"text": c.title, "value": c.id})
                 .toList(),
-            onChanged: (Category selected) {
+            onChanged: (String selected) {
               setState(() {
-                categoryController.text = selected.id;
+                categoryController.text = selected;
               });
             },
+            value: categoryController.text,
             icon: const Icon(Icons.category),
           ),
           ElevatedButton(

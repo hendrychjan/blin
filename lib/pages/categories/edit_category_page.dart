@@ -22,9 +22,17 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
         widget.category.id == AppController.to.defaultCategoryId.value;
   }
 
-  Future<void> _handleDelete() async {
-    await widget.category.delete();
-    Get.back();
+  Future<void> _handleRemove() async {
+    try {
+      await widget.category.remove();
+      Get.back();
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
   }
 
   Future<void> _handleUpdate(Category updatedCategory) async {
@@ -43,7 +51,7 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
             IconButton(
               key: UniqueKey(),
               icon: const Icon(Icons.delete),
-              onPressed: _handleDelete,
+              onPressed: _handleRemove,
             ),
         ],
       ),
