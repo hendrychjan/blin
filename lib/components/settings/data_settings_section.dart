@@ -10,6 +10,51 @@ class DataSettingsSection extends StatefulWidget {
 }
 
 class _DataSettingsSectionState extends State<DataSettingsSection> {
+  bool _backupInProgress = false;
+  bool _restoreInProgress = false;
+
+  void _handleBackupData() async {
+    setState(() {
+      _backupInProgress = true;
+    });
+
+    await LocalDataService.backupData();
+    Get.snackbar(
+      "Success",
+      "Backup file created successfully!",
+      snackPosition: SnackPosition.BOTTOM,
+    );
+
+    setState(() {
+      _backupInProgress = false;
+    });
+  }
+
+  void _handleRestoreData() async {
+    setState(() {
+      _restoreInProgress = true;
+    });
+
+    try {
+      await LocalDataService.restoreData();
+      Get.snackbar(
+        "Success",
+        "Synchronized with the backup file!",
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
+
+    setState(() {
+      _restoreInProgress = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -28,21 +73,25 @@ class _DataSettingsSectionState extends State<DataSettingsSection> {
               ),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.only(
+          Padding(
+            padding: const EdgeInsets.only(
               bottom: 8,
             ),
-            child: ElevatedButton(
-              onPressed: LocalDataService.exportData,
-              child: Text("Backup data (export)"),
-            ),
+            child: (!_backupInProgress)
+                ? ElevatedButton(
+                    onPressed: _handleBackupData,
+                    child: const Text("Backup data"),
+                  )
+                : const CircularProgressIndicator(),
           ),
           Padding(
             padding: const EdgeInsets.only(),
-            child: ElevatedButton(
-              onPressed: () {},
-              child: const Text("Restore data (import)"),
-            ),
+            child: (!_restoreInProgress)
+                ? ElevatedButton(
+                    onPressed: _handleRestoreData,
+                    child: const Text("Restore data"),
+                  )
+                : const CircularProgressIndicator(),
           ),
         ],
       ),

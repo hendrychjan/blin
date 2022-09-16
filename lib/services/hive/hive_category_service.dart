@@ -4,9 +4,9 @@ import 'package:hive/hive.dart';
 class HiveCategoryService {
   static final Box<Category> _box = Hive.box<Category>('categories');
 
-  static Future<List<Category>> getCategories() async {
+  static List<Category> getCategories() {
     final categories = _box.values.toList();
-    return categories.cast<Category>();
+    return categories;
   }
 
   static Future<void> addCategory(Category category) async {

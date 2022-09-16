@@ -50,13 +50,13 @@ class Category extends HiveObject {
 
   String toJson() => conv.json.encode(toMap());
 
-  static Future<List<Category>> getAll() async {
-    return (await HiveCategoryService.getCategories());
+  static List<Category> getAll() {
+    return HiveCategoryService.getCategories();
   }
 
-  Future<void> create() async {
+  Future<void> create({forceId = false}) async {
     // Create a new, unique id
-    id = DateTime.now().millisecondsSinceEpoch.toString();
+    if (!forceId) id = DateTime.now().millisecondsSinceEpoch.toString();
 
     // DB create
     await HiveCategoryService.addCategory(this);
@@ -110,5 +110,9 @@ class Category extends HiveObject {
       AppController.to.categories.add(category);
       AppController.to.defaultCategoryId.value = category.id;
     }
+  }
+
+  bool existsIn(List<Category> target) {
+    return target.where((c) => c.id == id).isNotEmpty;
   }
 }

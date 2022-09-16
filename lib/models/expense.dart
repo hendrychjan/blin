@@ -1,5 +1,6 @@
 import 'dart:convert' as conv;
 import 'package:blin/get/app_controller.dart';
+import 'package:blin/models/category.dart';
 import 'package:blin/services/hive/hive_expense_service.dart';
 import 'package:hive/hive.dart';
 
@@ -36,10 +37,10 @@ class Expense extends HiveObject {
   });
 
   factory Expense.fromMap(Map<String, dynamic> map) => Expense(
-        id: map["id"],
+        id: map["id"].toString(),
         title: map["title"],
         description: map["description"] ?? "",
-        cost: double.parse(map["cost"]),
+        cost: double.parse(map["cost"].toString()),
         date: DateTime.parse(map["date"]).toLocal(),
         categoryId: map["categoryId"],
       );
@@ -62,9 +63,9 @@ class Expense extends HiveObject {
     return HiveExpenseService.getExpenses(filter);
   }
 
-  Future<void> create() async {
+  Future<void> create({forceId = false}) async {
     // Create a new, unique id
-    id = DateTime.now().millisecondsSinceEpoch.toString();
+    if (!forceId) id = DateTime.now().millisecondsSinceEpoch.toString();
 
     // DB create
     await HiveExpenseService.addExpense(this);
@@ -87,5 +88,13 @@ class Expense extends HiveObject {
 
     // Run the AppController sync hook
     AppController.to.updateExpensesSummary();
+  }
+
+  bool existsIn(List<Expense> target) {
+    return target.where((e) => e.id == id).isNotEmpty;
+  }
+
+  bool categoryExistsIn(List<Category> categories) {
+    return categories.where((c) => c.id == categoryId).isNotEmpty;
   }
 }

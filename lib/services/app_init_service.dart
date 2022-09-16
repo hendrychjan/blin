@@ -42,7 +42,7 @@ class AppInitService {
     // Load data to app controller
 
     // Categories
-    AppController.to.categories.addAll((await Category.getAll()));
+    AppController.to.categories.addAll(Category.getAll());
 
     // Expenses
     DateTime today = DateTime(
