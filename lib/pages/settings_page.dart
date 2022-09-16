@@ -1,5 +1,5 @@
-import 'package:blin/components/appearance_settings_section.dart';
-import 'package:blin/components/data_settings_section.dart';
+import 'package:blin/components/settings/appearance_settings_section.dart';
+import 'package:blin/components/settings/data_settings_section.dart';
 import 'package:blin/get/app_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
