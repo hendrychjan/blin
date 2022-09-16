@@ -1,3 +1,4 @@
+import 'package:blin/services/local_data_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -27,24 +28,20 @@ class _DataSettingsSectionState extends State<DataSettingsSection> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(
+          const Padding(
+            padding: EdgeInsets.only(
               bottom: 8,
             ),
             child: ElevatedButton(
-              onPressed: () {
-                // TODO: implement data export
-              },
-              child: const Text("Export"),
+              onPressed: LocalDataService.exportData,
+              child: Text("Backup data (export)"),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(),
             child: ElevatedButton(
-              onPressed: () {
-                // TODO: implement data import
-              },
-              child: const Text("Import"),
+              onPressed: () {},
+              child: const Text("Restore data (import)"),
             ),
           ),
         ],
