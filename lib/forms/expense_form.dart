@@ -1,6 +1,5 @@
 import 'package:blin/get/app_controller.dart';
 import 'package:blin/get/ui_controller.dart';
-import 'package:blin/models/category.dart';
 import 'package:blin/models/expense.dart';
 import 'package:flutter/material.dart';
 

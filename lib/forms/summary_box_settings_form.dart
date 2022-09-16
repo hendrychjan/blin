@@ -19,12 +19,14 @@ class _SummaryBoxSettingsFormState extends State<SummaryBoxSettingsForm> {
   final formKey = GlobalKey<FormState>();
   final _limitValueController = TextEditingController();
   late bool _showLimitController;
+  late bool _showDecimalsController;
 
   @override
   void initState() {
     super.initState();
     _limitValueController.text = widget.initialState['limitValue'].toString();
     _showLimitController = widget.initialState['showLimit'];
+    _showDecimalsController = widget.initialState['showDecimals'];
   }
 
   @override
@@ -49,6 +51,15 @@ class _SummaryBoxSettingsFormState extends State<SummaryBoxSettingsForm> {
               });
             },
           ),
+          UiController.renderSwitch(
+            hint: "Display decimals",
+            value: _showDecimalsController,
+            onChange: (value) {
+              setState(() {
+                _showDecimalsController = value;
+              });
+            },
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -68,6 +79,7 @@ class _SummaryBoxSettingsFormState extends State<SummaryBoxSettingsForm> {
                     {
                       'limitValue': int.parse(_limitValueController.text),
                       'showLimit': _showLimitController,
+                      'showDecimals': _showDecimalsController,
                     },
                   );
                 },

@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:intl/intl_standalone.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -87,11 +88,17 @@ class AppInitService {
     // Initialize the module
     await GetStorage.init();
 
+    String defaultLocale = await findSystemLocale();
+    NumberFormat defaultCurrency =
+        NumberFormat.simpleCurrency(locale: defaultLocale);
+
     // If it is the first time the app is run, set the default values
-    await GetStorage().writeIfNull("app_locale", (await findSystemLocale()));
+    await GetStorage().writeIfNull("app_locale", defaultLocale);
     await GetStorage().writeIfNull("sum_target", "week");
     await GetStorage().writeIfNull("show_limit", false);
+    await GetStorage().writeIfNull("show_decimals", false);
     await GetStorage().writeIfNull("limit_value", 0);
+    await GetStorage().writeIfNull("currency", defaultCurrency.currencyName);
     await GetStorage().writeIfNull("default_category_id", "0");
 
     // Read user preferences (values from get storage) and set
@@ -99,7 +106,9 @@ class AppInitService {
     AppController.to.appLocale.value = GetStorage().read("app_locale");
     AppController.to.summaryTarget.value = GetStorage().read("sum_target");
     AppController.to.showLimit.value = GetStorage().read("show_limit");
+    AppController.to.showDecimals.value = GetStorage().read("show_decimals");
     AppController.to.limitValue.value = GetStorage().read("limit_value");
+    AppController.to.currency.value = GetStorage().read("currency");
     AppController.to.defaultCategoryId.value =
         GetStorage().read("default_category_id");
   }

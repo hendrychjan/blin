@@ -24,13 +24,16 @@ class _SummaryBoxState extends State<SummaryBox> {
           initialState: {
             'limitValue': AppController.to.limitValue.value,
             'showLimit': AppController.to.showLimit.value,
+            'showDecimals': AppController.to.showDecimals.value,
           },
           handleSubmit: (Map<String, dynamic> values) async {
             AppController.to.limitValue.value = values['limitValue'];
             AppController.to.showLimit.value = values['showLimit'];
+            AppController.to.showDecimals.value = values['showDecimals'];
 
             await GetStorage().write("limit_value", values['limitValue']);
             await GetStorage().write("show_limit", values['showLimit']);
+            await GetStorage().write("show_decimals", values['showDecimals']);
 
             Get.back();
           },
@@ -38,6 +41,38 @@ class _SummaryBoxState extends State<SummaryBox> {
       ),
       barrierDismissible: false,
     );
+  }
+
+  String _formatNumber(double value) {
+    if (!AppController.to.showDecimals.value) {
+      return value.round().toString();
+    } else {
+      return value.toString();
+    }
+  }
+
+  String _getLimitText() {
+    String text = "";
+
+    text += "Remaining: ";
+    text += _formatNumber(
+      AppController.to.limitValue.value -
+          AppController.to.expensesSummary.value,
+    );
+    text += " / ";
+    text += _formatNumber(AppController.to.limitValue.value + .0);
+    text += " ${AppController.to.currency.value}";
+
+    return text;
+  }
+
+  String _getSummaryText() {
+    String text = "";
+
+    text += _formatNumber(AppController.to.expensesSummary.value);
+    text += " ${AppController.to.currency.value}";
+
+    return text;
   }
 
   @override
@@ -60,7 +95,7 @@ class _SummaryBoxState extends State<SummaryBox> {
                 children: [
                   // Expenses summary
                   Text(
-                    "${AppController.to.expensesSummary} Kč",
+                    _getSummaryText(),
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -72,7 +107,7 @@ class _SummaryBoxState extends State<SummaryBox> {
                     Padding(
                       padding: const EdgeInsets.only(top: 8),
                       child: Text(
-                        "Zbývá ${AppController.to.limitValue.value - AppController.to.expensesSummary.value} Kč / ${AppController.to.limitValue.value} Kč",
+                        _getLimitText(),
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,

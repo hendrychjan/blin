@@ -1,7 +1,6 @@
 import 'package:blin/components/expenses_list.dart';
 import 'package:blin/components/summary_box.dart';
 import 'package:blin/get/app_controller.dart';
-import 'package:blin/models/expense.dart';
 import 'package:blin/pages/categories/categories_overview_page.dart';
 import 'package:blin/pages/expenses/expenses_overview_page.dart';
 import 'package:blin/pages/expenses/new_expense_page.dart';

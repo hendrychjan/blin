@@ -18,7 +18,9 @@ class AppController extends GetxController {
 
   // Settings
   var showLimit = false.obs;
+  var showDecimals = false.obs;
   var limitValue = 0.obs;
+  var currency = "Kč".obs;
 
   void updateExpensesSummary() async {
     List<Expense> expensesFiltered = [];

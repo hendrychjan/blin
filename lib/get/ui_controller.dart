@@ -115,6 +115,7 @@ class UiController extends GetxController {
     TextInputType keyboardType = TextInputType.text,
     bool obscureText = false,
     Icon? icon,
+    Function? onSubmit,
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
@@ -128,6 +129,9 @@ class UiController extends GetxController {
         obscureText: obscureText,
         validator: (value) {
           return _handleValidate(value.toString(), validationRules);
+        },
+        onFieldSubmitted: (value) {
+          if (onSubmit != null) onSubmit(value);
         },
       ),
     );
