@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:blin/get/app_controller.dart';
 import 'package:blin/models/category.dart';
 import 'package:blin/models/expense.dart';
 import 'package:file_picker/file_picker.dart';
@@ -18,8 +17,7 @@ class LocalDataService {
     };
 
     // Export all categories
-    List<Map> categories =
-        (await Category.getAll()).map((e) => e.toMap()).toList();
+    List<Map> categories = Category.getAll().map((e) => e.toMap()).toList();
     (exportMap["categories"] as List).addAll(categories);
 
     // Export all expenses and populate their categories
@@ -66,7 +64,7 @@ class LocalDataService {
         in (backupMap["categories"] as List)) {
       try {
         Category category = Category.fromMap(categoryMap);
-        if (!category.existsIn(existingCategories)) {
+        if (!category.existsIn(existingCategories) && category.id != "0") {
           await category.create(forceId: true);
           existingCategories.add(category);
         }

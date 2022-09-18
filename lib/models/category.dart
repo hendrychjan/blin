@@ -76,7 +76,7 @@ class Category extends HiveObject {
 
   Future<void> remove() async {
     // Check - the default category cannot be removed
-    if (id == AppController.to.defaultCategoryId.value) return;
+    if (id == "0") return;
 
     // Check - the category cannot be removed if it has expenses
     List<Expense> expenses = Expense.getAll({
@@ -94,7 +94,7 @@ class Category extends HiveObject {
   static void ensureDefault() async {
     if (AppController.to.categories.isEmpty) {
       Category category = Category(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        id: "0",
         title: "Default",
         description: "Default category",
         color: "#FF194466",
@@ -103,12 +103,8 @@ class Category extends HiveObject {
       // DB create
       await HiveCategoryService.addCategory(category);
 
-      // GetStorage update
-      await GetStorage().write("default_category_id", category.id);
-
-      // AppController update
+      // Add to AppController
       AppController.to.categories.add(category);
-      AppController.to.defaultCategoryId.value = category.id;
     }
   }
 

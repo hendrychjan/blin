@@ -99,7 +99,6 @@ class AppInitService {
     await GetStorage().writeIfNull("show_decimals", false);
     await GetStorage().writeIfNull("limit_value", 0);
     await GetStorage().writeIfNull("currency", defaultCurrency.currencyName);
-    await GetStorage().writeIfNull("default_category_id", "0");
 
     // Read user preferences (values from get storage) and set
     // accordingly in app controllers
@@ -109,7 +108,5 @@ class AppInitService {
     AppController.to.showDecimals.value = GetStorage().read("show_decimals");
     AppController.to.limitValue.value = GetStorage().read("limit_value");
     AppController.to.currency.value = GetStorage().read("currency");
-    AppController.to.defaultCategoryId.value =
-        GetStorage().read("default_category_id");
   }
 }

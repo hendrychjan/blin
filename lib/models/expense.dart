@@ -27,6 +27,9 @@ class Expense extends HiveObject {
   @HiveField(5)
   String categoryId;
 
+  @HiveField(6)
+  bool excluded;
+
   Expense({
     required this.id,
     required this.title,
@@ -34,6 +37,7 @@ class Expense extends HiveObject {
     required this.cost,
     required this.date,
     required this.categoryId,
+    required this.excluded,
   });
 
   factory Expense.fromMap(Map<String, dynamic> map) => Expense(
@@ -43,6 +47,7 @@ class Expense extends HiveObject {
         cost: double.parse(map["cost"].toString()),
         date: DateTime.parse(map["date"]).toLocal(),
         categoryId: map["categoryId"],
+        excluded: map["excluded"].toString() == "true",
       );
 
   factory Expense.fromJson(String json) =>
@@ -55,6 +60,7 @@ class Expense extends HiveObject {
         "cost": cost,
         "date": date.toUtc().toIso8601String(),
         "categoryId": categoryId,
+        "excluded": excluded,
       };
 
   String toJson() => conv.json.encode(toMap());

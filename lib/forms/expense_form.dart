@@ -25,6 +25,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
   final costController = TextEditingController();
   final dateController = TextEditingController();
   final categoryController = TextEditingController();
+  late bool excludedController;
 
   @override
   void initState() {
@@ -37,9 +38,11 @@ class _ExpenseFormState extends State<ExpenseForm> {
       costController.text = widget.initialState!.cost.toString();
       dateController.text = widget.initialState!.date.toString();
       categoryController.text = widget.initialState!.categoryId;
+      excludedController = widget.initialState!.excluded;
     } else {
       dateController.text = DateTime.now().toString();
       categoryController.text = AppController.to.categories.first.id.toString();
+      excludedController = false;
     }
   }
 
@@ -77,7 +80,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
           UiController.renderSelect(
             hint: "Category",
             items: AppController.to.categories
-                .map((c) => {"text": c.title, "value": c.id})
+                .map((c) => {"text": c.title, "value": c.id, "color": c.color})
                 .toList(),
             onChanged: (String selected) {
               setState(() {
@@ -87,20 +90,32 @@ class _ExpenseFormState extends State<ExpenseForm> {
             value: categoryController.text,
             icon: const Icon(Icons.category),
           ),
+          UiController.renderSwitch(
+            hint: "Exclude",
+            value: excludedController,
+            onChange: (value) {
+              setState(() {
+                excludedController = value;
+              });
+            },
+          ),
           ElevatedButton(
             onPressed: () async {
               // Validate the form
               if (!formKey.currentState!.validate()) return;
 
               // Submit the form
-              await widget.handleSubmit(Expense(
-                id: widget.initialState?.id ?? "0",
-                title: titleController.text,
-                description: descriptionController.text,
-                cost: double.parse(costController.text),
-                date: DateTime.parse(dateController.text),
-                categoryId: categoryController.text,
-              ));
+              await widget.handleSubmit(
+                Expense(
+                  id: widget.initialState?.id ?? "0",
+                  title: titleController.text,
+                  description: descriptionController.text,
+                  cost: double.parse(costController.text),
+                  date: DateTime.parse(dateController.text),
+                  categoryId: categoryController.text,
+                  excluded: excludedController,
+                ),
+              );
             },
             child: Text(widget.submitButtomText ?? "Submit"),
           ),

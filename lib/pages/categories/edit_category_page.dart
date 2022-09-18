@@ -18,8 +18,7 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
   @override
   void initState() {
     super.initState();
-    isDefaultCatgory =
-        widget.category.id == AppController.to.defaultCategoryId.value;
+    isDefaultCatgory = widget.category.id == "0";
   }
 
   Future<void> _handleRemove() async {

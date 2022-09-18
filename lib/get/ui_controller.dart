@@ -71,7 +71,12 @@ class UiController extends GetxController {
         items: items.map((item) {
           return DropdownMenuItem(
             value: item["value"],
-            child: Text(item["text"]),
+            child: Text(
+              item["text"],
+              style: TextStyle(
+                  color: UiController.hexStringToColor(
+                      item["color"] ?? "FF194466")),
+            ),
           );
         }).toList(),
         onChanged: (v) => onChanged(v),
