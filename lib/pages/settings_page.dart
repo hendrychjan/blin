@@ -1,6 +1,7 @@
 import 'package:blin/components/settings/appearance_settings_section.dart';
 import 'package:blin/components/settings/data_settings_section.dart';
 import 'package:blin/get/app_controller.dart';
+import 'package:blin/services/local_data_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,6 +13,8 @@ class SettinsPage extends StatefulWidget {
 }
 
 class _SettinsPageState extends State<SettinsPage> {
+  bool _mockDataLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,11 +44,44 @@ class _SettinsPageState extends State<SettinsPage> {
                     style: const TextStyle(color: Colors.grey),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 20),
-                  child: Text(
-                    "OSS with ❤️ by Jan Hendrych",
-                    style: TextStyle(color: Colors.grey),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: GestureDetector(
+                    onLongPress: () {
+                      Get.dialog(
+                        AlertDialog(
+                          title: const Text("Load mock data"),
+                          content: const Text(
+                            "Do you wish to load mock data? This serves for development purposes only.",
+                          ),
+                          actions: [
+                            ElevatedButton(
+                                onPressed: Get.back,
+                                child: const Text("Cancel")),
+                            ElevatedButton(
+                                onPressed: () async {
+                                  Future.delayed(Duration.zero, () async {
+                                    setState(() {
+                                      _mockDataLoading = true;
+                                    });
+                                    await LocalDataService.loadMockData();
+                                    setState(() {
+                                      _mockDataLoading = false;
+                                    });
+                                  });
+                                  Get.back();
+                                },
+                                child: const Text("Load")),
+                          ],
+                        ),
+                      );
+                    },
+                    child: (!_mockDataLoading)
+                        ? const Text(
+                            "OSS with ❤️ by Jan Hendrych",
+                            style: TextStyle(color: Colors.grey),
+                          )
+                        : const CircularProgressIndicator(),
                   ),
                 ),
               ],

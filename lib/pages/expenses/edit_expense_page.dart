@@ -41,7 +41,7 @@ class _EditExpensePageState extends State<EditExpensePage> {
           child: ExpenseForm(
             handleSubmit: _handleUpdate,
             initialState: widget.expense,
-            submitButtomText: "Update",
+            submitButtonText: "Update",
           ),
         ),
       ),

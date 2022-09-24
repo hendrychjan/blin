@@ -88,4 +88,66 @@ class LocalDataService {
       }
     }
   }
+
+  // Load mock data
+  static Future<void> loadMockData() async {
+    List<Category> mockCategories = [
+      Category(id: "0", title: "Essentials", color: "#FF194466"),
+      Category(id: "0", title: "Food", color: "#FF194466"),
+      Category(id: "0", title: "Fun", color: "#FF194466"),
+      Category(id: "0", title: "Health", color: "#FF194466"),
+    ];
+
+    for (Category c in mockCategories) {
+      await c.create();
+
+      // wait for 1 second to avoid duplicate ids
+      await Future.delayed(const Duration(seconds: 1));
+    }
+
+    DateTime now = DateTime.now();
+
+    // Generate a list of mock expenses
+    List<Expense> mockExpenses = [
+      Expense(
+        id: "0",
+        categoryId: mockCategories[0].id,
+        title: "Rent",
+        cost: 1000,
+        date: DateTime(now.year, now.month, now.day - 1),
+        excluded: true,
+      ),
+      Expense(
+        id: "0",
+        categoryId: mockCategories[1].id,
+        title: "Groceries",
+        cost: 100,
+        date: DateTime(now.year, now.month, now.day - 1),
+        excluded: true,
+      ),
+      Expense(
+        id: "0",
+        categoryId: mockCategories[2].id,
+        title: "Movie",
+        cost: 20,
+        date: DateTime(now.year, now.month, now.day - 1),
+        excluded: false,
+      ),
+      Expense(
+        id: "0",
+        categoryId: mockCategories[3].id,
+        title: "Gym",
+        cost: 50,
+        date: DateTime(now.year, now.month, now.day - 1),
+        excluded: true,
+      ),
+    ];
+
+    for (var expense in mockExpenses) {
+      await expense.create();
+
+      // wait for 1 second to avoid duplicate ids
+      await Future.delayed(const Duration(seconds: 1));
+    }
+  }
 }

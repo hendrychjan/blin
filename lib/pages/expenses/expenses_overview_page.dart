@@ -99,7 +99,9 @@ class _ExpensesOverviewPageState extends State<ExpensesOverviewPage> {
                 ),
               )
             else
-              Expanded(child: ExpensesList(expenses: _expenses)),
+              Column(
+                children: [Expanded(child: ExpensesList(expenses: _expenses))],
+              ),
           ],
         ));
   }

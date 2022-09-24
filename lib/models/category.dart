@@ -2,7 +2,6 @@ import 'dart:convert' as conv;
 import 'package:blin/get/app_controller.dart';
 import 'package:blin/models/expense.dart';
 import 'package:blin/services/hive/hive_category_service.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:hive/hive.dart';
 
 // hive_generate command: flutter packages pub run build_runner build

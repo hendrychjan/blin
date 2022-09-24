@@ -6,12 +6,12 @@ import 'package:flutter/material.dart';
 class ExpenseForm extends StatefulWidget {
   final Function handleSubmit;
   final Expense? initialState;
-  final String? submitButtomText;
+  final String? submitButtonText;
   const ExpenseForm(
       {Key? key,
       required this.handleSubmit,
       this.initialState,
-      this.submitButtomText})
+      this.submitButtonText})
       : super(key: key);
 
   @override
@@ -117,7 +117,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
                 ),
               );
             },
-            child: Text(widget.submitButtomText ?? "Submit"),
+            child: Text(widget.submitButtonText ?? "Submit"),
           ),
         ],
       ),

@@ -1,5 +1,4 @@
 import 'package:blin/forms/category_form.dart';
-import 'package:blin/get/app_controller.dart';
 import 'package:blin/models/category.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
