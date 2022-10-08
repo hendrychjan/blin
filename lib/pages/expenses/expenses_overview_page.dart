@@ -86,32 +86,25 @@ class _ExpensesOverviewPageState extends State<ExpensesOverviewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          key: UniqueKey(),
-          title: const Text('Expenses'),
-          actions: [
-            if (_expenses.isNotEmpty)
-              IconButton(
-                icon: const Icon(Icons.upload),
-                onPressed: _handleExportSelected,
-              ),
+      appBar: AppBar(
+        key: UniqueKey(),
+        title: const Text('Expenses'),
+        actions: [
+          if (_expenses.isNotEmpty)
             IconButton(
-                icon: const Icon(Icons.filter_list_alt),
-                onPressed: _displayFilterDialog),
-          ],
-        ),
-        body: Center(
-          child: (_expenses.isEmpty)
-              ? const Expanded(
-                  child: Center(
-                    child: Text('No results match the filter'),
-                  ),
-                )
-              : Column(
-                  children: [
-                    Expanded(child: ExpensesList(expenses: _expenses))
-                  ],
-                ),
-        ));
+              icon: const Icon(Icons.upload),
+              onPressed: _handleExportSelected,
+            ),
+          IconButton(
+              icon: const Icon(Icons.filter_list_alt),
+              onPressed: _displayFilterDialog),
+        ],
+      ),
+      body: (_expenses.isEmpty)
+          ? const Center(
+              child: Text('No results match the filter'),
+            )
+          : ExpensesList(expenses: _expenses),
+    );
   }
 }
