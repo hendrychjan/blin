@@ -1,4 +1,4 @@
-package com.hendrychjan.blindev
+package com.hendrychjan.blin
 
 import io.flutter.embedding.android.FlutterActivity
 

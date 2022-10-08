@@ -8,6 +8,39 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class LocalDataService {
+  static Future<void> exportData(List<Expense> expenses) async {
+    List exportMap = [];
+
+    List<Category> categories = Category.getAll();
+
+    // Export all expenses and populate their categories
+    List<Map> expenses = Expense.getAll().map((e) => e.toMap()).toList();
+    for (Map expense in expenses) {
+      expense["category"] = categories
+          .firstWhere((category) => category.id == expense["categoryId"])
+          .title;
+
+      // Remove all unnecessary fields from the expense
+      expense.remove("id");
+      expense.remove("description");
+      expense.remove("date");
+      expense.remove("excluded");
+      expense.remove("categoryId");
+    }
+    exportMap.addAll(expenses);
+
+    // Encode the export to a temp local file
+    Directory documentsDir = await getApplicationDocumentsDirectory();
+    String fileName = "blin_export_${DateTime.now().toLocal().toString()}.json";
+    String path = join(documentsDir.path, fileName);
+    String exportEncoded = jsonEncode(exportMap);
+
+    // Present the backup file to a user and then delete the temp file
+    await File(path).writeAsString(exportEncoded);
+    await Share.shareFiles([path]);
+    await File(path).delete();
+  }
+
   static Future<void> backupData() async {
     DateTime timestamp = DateTime.now().toLocal();
     Map<String, dynamic> exportMap = {

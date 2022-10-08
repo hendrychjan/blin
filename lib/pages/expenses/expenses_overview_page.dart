@@ -2,6 +2,7 @@ import 'package:blin/components/expenses_list.dart';
 import 'package:blin/forms/expenses_overview_filter_form.dart';
 import 'package:blin/get/app_controller.dart';
 import 'package:blin/models/expense.dart';
+import 'package:blin/services/local_data_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -56,6 +57,10 @@ class _ExpensesOverviewPageState extends State<ExpensesOverviewPage> {
     );
   }
 
+  void _handleExportSelected() async {
+    await LocalDataService.exportData(_expenses);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -85,24 +90,28 @@ class _ExpensesOverviewPageState extends State<ExpensesOverviewPage> {
           key: UniqueKey(),
           title: const Text('Expenses'),
           actions: [
+            if (_expenses.isNotEmpty)
+              IconButton(
+                icon: const Icon(Icons.upload),
+                onPressed: _handleExportSelected,
+              ),
             IconButton(
                 icon: const Icon(Icons.filter_list_alt),
                 onPressed: _displayFilterDialog),
           ],
         ),
-        body: Column(
-          children: [
-            if (_expenses.isEmpty)
-              const Expanded(
-                child: Center(
-                  child: Text('No results match the filter'),
+        body: Center(
+          child: (_expenses.isEmpty)
+              ? const Expanded(
+                  child: Center(
+                    child: Text('No results match the filter'),
+                  ),
+                )
+              : Column(
+                  children: [
+                    Expanded(child: ExpensesList(expenses: _expenses))
+                  ],
                 ),
-              )
-            else
-              Column(
-                children: [Expanded(child: ExpensesList(expenses: _expenses))],
-              ),
-          ],
         ));
   }
 }
