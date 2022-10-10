@@ -25,7 +25,14 @@ class _ExpensesOverviewFilterFormState
   final _customRangeDateFrom = TextEditingController();
   final _customRangeDateTo = TextEditingController();
   final _rangeTargetDate = TextEditingController();
+  final _excludedController = TextEditingController();
   List _categoriesController = [];
+
+  final _excludedOptions = [
+    {"text": "All", "value": "all"},
+    {"text": "Excluded", "value": "is"},
+    {"text": "Not excluded", "value": "is not"}
+  ];
 
   final _timeRangeOptions = [
     {"text": "All time", "value": "alltime"},
@@ -47,6 +54,7 @@ class _ExpensesOverviewFilterFormState
         widget.initialState["customRangeDateTo"].toString();
     _rangeTargetDate.text = widget.initialState["rangeTargetDate"].toString();
     _categoriesController.addAll(widget.initialState["categories"]);
+    _excludedController.text = "all";
   }
 
   @override
@@ -106,6 +114,16 @@ class _ExpensesOverviewFilterFormState
               validationRules: ["required"],
               type: DateTimePickerType.date,
             ),
+          UiController.renderSelect(
+            hint: "Excluded",
+            items: _excludedOptions,
+            value: _excludedController.text,
+            onChanged: (String selected) => setState(
+              () {
+                _excludedController.text = selected;
+              },
+            ),
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -123,6 +141,7 @@ class _ExpensesOverviewFilterFormState
 
                   await widget.handleSubmit(
                     {
+                      "excluded": _excludedController.text,
                       "range": _rangeController.text,
                       "customRangeDateFrom":
                           DateTime.parse(_customRangeDateFrom.text),

@@ -14,8 +14,8 @@ class LocalDataService {
     List<Category> categories = Category.getAll();
 
     // Export all expenses and populate their categories
-    List<Map> expenses = Expense.getAll().map((e) => e.toMap()).toList();
-    for (Map expense in expenses) {
+    List<Map> expensesMap = expenses.map((e) => e.toMap()).toList();
+    for (Map expense in expensesMap) {
       expense["category"] = categories
           .firstWhere((category) => category.id == expense["categoryId"])
           .title;
@@ -23,11 +23,10 @@ class LocalDataService {
       // Remove all unnecessary fields from the expense
       expense.remove("id");
       expense.remove("description");
-      expense.remove("date");
       expense.remove("excluded");
       expense.remove("categoryId");
     }
-    exportMap.addAll(expenses);
+    exportMap.addAll(expensesMap);
 
     // Encode the export to a temp local file
     Directory documentsDir = await getApplicationDocumentsDirectory();

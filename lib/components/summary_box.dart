@@ -22,18 +22,23 @@ class _SummaryBoxState extends State<SummaryBox> {
         elevation: 0,
         content: SummaryBoxSettingsForm(
           initialState: {
+            'excluded': AppController.to.showExcluded.value,
             'limitValue': AppController.to.limitValue.value,
             'showLimit': AppController.to.showLimit.value,
             'showDecimals': AppController.to.showDecimals.value,
           },
           handleSubmit: (Map<String, dynamic> values) async {
+            AppController.to.showExcluded.value = values['excluded'];
             AppController.to.limitValue.value = values['limitValue'];
             AppController.to.showLimit.value = values['showLimit'];
             AppController.to.showDecimals.value = values['showDecimals'];
 
+            await GetStorage().write("show_excluded", values['excluded']);
             await GetStorage().write("limit_value", values['limitValue']);
             await GetStorage().write("show_limit", values['showLimit']);
             await GetStorage().write("show_decimals", values['showDecimals']);
+
+            AppController.to.updateExpensesSummary();
 
             Get.back();
           },

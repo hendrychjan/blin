@@ -15,7 +15,14 @@ class UiController extends GetxController {
   }
 
   static Color hexStringToColor(String hexString) {
-    return Color(0xFF + int.parse(hexString.substring(1), radix: 16));
+    Color c;
+    hexString = hexString.replaceAll("#", "");
+    if (hexString.length == 6) {
+      c = Color(int.parse("FF$hexString", radix: 16));
+    } else {
+      c = Color(int.parse(hexString, radix: 16));
+    }
+    return c;
   }
 
   static String formatCurrency(double value) {
@@ -74,8 +81,8 @@ class UiController extends GetxController {
             child: Text(
               item["text"],
               style: TextStyle(
-                  color: UiController.hexStringToColor(
-                      item["color"] ?? "FF194466")),
+                  color:
+                      UiController.hexStringToColor(item["color"] ?? "194466")),
             ),
           );
         }).toList(),

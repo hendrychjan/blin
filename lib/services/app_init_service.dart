@@ -98,6 +98,7 @@ class AppInitService {
     await GetStorage().writeIfNull("show_limit", false);
     await GetStorage().writeIfNull("show_decimals", false);
     await GetStorage().writeIfNull("limit_value", 0);
+    await GetStorage().writeIfNull("show_excluded", "all");
     await GetStorage().writeIfNull("currency", defaultCurrency.currencyName);
 
     // Read user preferences (values from get storage) and set
@@ -107,6 +108,7 @@ class AppInitService {
     AppController.to.showLimit.value = GetStorage().read("show_limit");
     AppController.to.showDecimals.value = GetStorage().read("show_decimals");
     AppController.to.limitValue.value = GetStorage().read("limit_value");
+    AppController.to.showExcluded.value = GetStorage().read("show_excluded");
     AppController.to.currency.value = GetStorage().read("currency");
   }
 }

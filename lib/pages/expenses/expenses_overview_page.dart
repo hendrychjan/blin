@@ -73,6 +73,7 @@ class _ExpensesOverviewPageState extends State<ExpensesOverviewPage> {
     );
 
     _filter = {
+      "excluded": "all",
       "range": "alltime",
       "rangeTargetDate": today,
       "customRangeDateFrom": today,

@@ -16,6 +16,17 @@ class HiveExpenseService {
         }
       }
 
+      // Filter by "excluded"
+      if (filter.containsKey("excluded")) {
+        if (filter["excluded"] == "all") {
+          // Do nothing
+        } else if (filter["excluded"] == "is" && !expense.excluded) {
+          return false;
+        } else if (filter["excluded"] == "is not" && expense.excluded) {
+          return false;
+        }
+      }
+
       // Filter by date
       if (filter.containsKey("range")) {
         if (filter["range"] == "alltime") {

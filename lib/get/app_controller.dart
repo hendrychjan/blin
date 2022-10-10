@@ -16,6 +16,7 @@ class AppController extends GetxController {
   var summaryTarget = "".obs;
 
   // Settings
+  var showExcluded = "all".obs;
   var showLimit = false.obs;
   var showDecimals = false.obs;
   var limitValue = 0.obs;
@@ -29,18 +30,30 @@ class AppController extends GetxController {
       DateTime.now().day,
     );
 
-    if (summaryTarget.value == "week") {
-      expensesFiltered.addAll(
-        Expense.getAll({"range": "week", "rangeTargetDate": today}),
-      );
-    }
+    expensesFiltered.addAll(Expense.getAll({
+      "range": summaryTarget.value,
+      "rangeTargetDate": today,
+      "excluded": showExcluded.value,
+    }));
 
-    // Get all expenses that date the current month
-    if (summaryTarget.value == "month") {
-      expensesFiltered.addAll(
-        Expense.getAll({"range": "month", "rangeTargetDate": today}),
-      );
-    }
+    // if (summaryTarget.value == "week") {
+    //   expensesFiltered.addAll(
+    //     Expense.getAll({
+    //       "range": "week",
+    //     }),
+    //   );
+    // }
+
+    // // Get all expenses that date the current month
+    // if (summaryTarget.value == "month") {
+    //   expensesFiltered.addAll(
+    //     Expense.getAll({
+    //       "range": "month",
+    //       "rangeTargetDate": today,
+    //       "excluded": showExcluded.value
+    //     }),
+    //   );
+    // }
 
     // Sort the expenses from newest to oldest
     expensesFiltered.sort((a, b) => b.date.compareTo(a.date));

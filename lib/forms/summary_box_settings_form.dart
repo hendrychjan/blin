@@ -18,12 +18,20 @@ class SummaryBoxSettingsForm extends StatefulWidget {
 class _SummaryBoxSettingsFormState extends State<SummaryBoxSettingsForm> {
   final formKey = GlobalKey<FormState>();
   final _limitValueController = TextEditingController();
+  final _excludedController = TextEditingController();
   late bool _showLimitController;
   late bool _showDecimalsController;
+
+  final _excludedOptions = [
+    {"text": "All", "value": "all"},
+    {"text": "Excluded", "value": "is"},
+    {"text": "Not excluded", "value": "is not"}
+  ];
 
   @override
   void initState() {
     super.initState();
+    _excludedController.text = widget.initialState['excluded'];
     _limitValueController.text = widget.initialState['limitValue'].toString();
     _showLimitController = widget.initialState['showLimit'];
     _showDecimalsController = widget.initialState['showDecimals'];
@@ -37,6 +45,16 @@ class _SummaryBoxSettingsFormState extends State<SummaryBoxSettingsForm> {
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
+          UiController.renderSelect(
+            hint: "Excluded",
+            items: _excludedOptions,
+            value: _excludedController.text,
+            onChanged: (String selected) => setState(
+              () {
+                _excludedController.text = selected;
+              },
+            ),
+          ),
           UiController.renderTextInput(
             hint: "Spendings limit",
             controller: _limitValueController,
@@ -77,6 +95,7 @@ class _SummaryBoxSettingsFormState extends State<SummaryBoxSettingsForm> {
 
                   await widget.handleSubmit(
                     {
+                      'excluded': _excludedController.text,
                       'limitValue': int.parse(_limitValueController.text),
                       'showLimit': _showLimitController,
                       'showDecimals': _showDecimalsController,
